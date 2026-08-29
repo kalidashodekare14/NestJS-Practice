@@ -1,0 +1,6 @@
+{
+  "github.completions.enabled": false,
+  "github.copilot.enable": {
+    "*": false
+  }
+}
