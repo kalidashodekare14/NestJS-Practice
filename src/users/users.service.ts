@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
@@ -13,6 +14,10 @@ export class UsersService {
             name: "Bijoy"
         }
     ]
+
+    constructor(
+        private readonly configService: ConfigService,
+    ){}
 
     getUsers() {
         return this.users
@@ -33,6 +38,13 @@ export class UsersService {
             id: 1,
             name: "Kalidash Odekare",
             role: "USER"
+        }
+    }
+
+    getConfig(){
+        return {
+            port: this.configService.get<number>('PORT'),
+            jwtSecret: this.configService.get<string>('JWT_SECRET')
         }
     }
 }

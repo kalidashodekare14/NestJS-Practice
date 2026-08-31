@@ -12,18 +12,18 @@ export class UsersController {
     @UseInterceptors(LoggingInterceptor)
     @Get()
     getUsers(
-        @Query("page", ParseIntPipe) page: number,
-        @Query("limit", ParseIntPipe) limit: number,
-        @Query("price", ParseFloatPipe) price: number,
-        @Query("active", ParseBoolPipe) active: boolean,
+        // @Query("page", ParseIntPipe) page: number,
+        // @Query("limit", ParseIntPipe) limit: number,
+        // @Query("price", ParseFloatPipe) price: number,
+        // @Query("active", ParseBoolPipe) active: boolean,
     ){
         return {
             success: true,
             message: "Users retrieved successfully",
-            page,
-            limit,
-            price,
-            active,
+            // page,
+            // limit,
+            // price,
+            // active,
             data: this.usersService.getUsers(),
         }
     }
@@ -36,6 +36,11 @@ export class UsersController {
             message: "Profile info get sucessfully",
             data: this.usersService.getProfile(),
         }
+    }
+
+    @Get("config")
+    getConfig(){
+        return this.usersService.getConfig();
     }
 
     @Get(":id")
