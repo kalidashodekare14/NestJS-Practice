@@ -1,32 +1,27 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { PrismaService } from '../prisma/prisma.service.js';
 
 @Injectable()
 export class UsersService {
 
-    private users = [
-        {
-            id: 1,
-            name: "Kalidash"
-        },
-        {
-            id: 2,
-            name: "Bijoy"
-        }
-    ]
-
     constructor(
         private readonly configService: ConfigService,
-    ){}
+        private readonly prisma: PrismaService
+    ) { }
 
-    getUsers() {
-        return this.users
+   async getUsers() {
+        return await this.prisma.user.findMany();
     }
 
-    getUser(id: number) {
-        const user = this.users.find((user) => user.id === id);
+   async getUser(id: string) {
+        const user = await this.prisma.user.findFirst({
+            where: {
+                id 
+            }
+        });
 
-        if(!user){
+        if (!user) {
             throw new NotFoundException("User not found");
         }
 
@@ -41,7 +36,7 @@ export class UsersService {
         }
     }
 
-    getConfig(){
+    getConfig() {
         return {
             port: this.configService.get<number>('PORT'),
             jwtSecret: this.configService.get<string>('JWT_SECRET')
