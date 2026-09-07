@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module.js';
 import { LoggerMiddleware } from './middlewares/logger.middleware.js'
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module.js';
+import { AuthModule } from './auth/auth.module.js';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { PrismaModule } from './prisma/prisma.module.js';
       isGlobal: true
     }),
     PrismaModule,
-    UsersModule
+    UsersModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

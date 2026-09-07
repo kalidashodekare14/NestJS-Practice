@@ -7,7 +7,7 @@ import { LoggingInterceptor } from '../logging/logging.interceptor.js';
 @Controller('users')
 export class UsersController {
 
-    constructor(private readonly usersService: UsersService) {}
+    constructor(private readonly usersService: UsersService) { }
 
     @UseInterceptors(LoggingInterceptor)
     @Get()
@@ -16,7 +16,7 @@ export class UsersController {
         // @Query("limit", ParseIntPipe) limit: number,
         // @Query("price", ParseFloatPipe) price: number,
         // @Query("active", ParseBoolPipe) active: boolean,
-    ){
+    ) {
         return {
             success: true,
             message: "Users retrieved successfully",
@@ -30,7 +30,7 @@ export class UsersController {
 
     @UseGuards(AuthGuard)
     @Get("profile")
-    getProfile(){
+    getProfile() {
         return {
             success: true,
             message: "Profile info get sucessfully",
@@ -39,25 +39,25 @@ export class UsersController {
     }
 
     @Get("config")
-    getConfig(){
+    getConfig() {
         return this.usersService.getConfig();
     }
 
     @Get(":id")
-    getUser(@Param("id") id: string){
+    async getUser(@Param("id") id: string) {
         return {
             success: true,
             message: 'User retrieved successfully',
-            data: this.usersService.getUser(id),
+            data: await this.usersService.getUser(id),
         }
     }
 
     @Post()
-    createUser(@Body() body: CreateUserDto){
+    createUser(@Body() body: CreateUserDto) {
         return {
             success: true,
             message: 'User retrieved successfully',
-            data: body  
+            data: body
         }
     }
 }
