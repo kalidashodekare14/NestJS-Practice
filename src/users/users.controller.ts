@@ -1,8 +1,10 @@
-import { Body, Controller, Get, Param, ParseBoolPipe, ParseFloatPipe, ParseIntPipe, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseBoolPipe, ParseFloatPipe, ParseIntPipe, Post, Query, Req, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service.js';
 import { CreateUserDto } from './dto/create-user.dto/create-user.dto.js';
 import { AuthGuard } from '../auth/auth.guard.js';
 import { LoggingInterceptor } from '../logging/logging.interceptor.js';
+import type { AuthenticatedRequest } from '../common/types/authenticated-request.js';
+
 
 @Controller('users')
 export class UsersController {
@@ -30,11 +32,12 @@ export class UsersController {
 
     @UseGuards(AuthGuard)
     @Get("profile")
-    getProfile() {
+    async getProfile(@Req() request: AuthenticatedRequest) {
+        const result = await this.usersService.getProfile(request.user)
         return {
             success: true,
             message: "Profile info get sucessfully",
-            data: this.usersService.getProfile(),
+            data: result,
         }
     }
 

@@ -10,14 +10,14 @@ export class UsersService {
         private readonly prisma: PrismaService
     ) { }
 
-   async getUsers() {
+    async getUsers() {
         return await this.prisma.user.findMany();
     }
 
-   async getUser(id: string) {
+    async getUser(id: string) {
         const user = await this.prisma.user.findFirst({
             where: {
-                id 
+                id
             }
         });
 
@@ -28,12 +28,13 @@ export class UsersService {
         return user;
     }
 
-    getProfile() {
-        return {
-            id: 1,
-            name: "Kalidash Odekare",
-            role: "USER"
-        }
+    async getProfile(user: any) {
+        const profile = await this.prisma.user.findUnique({
+            where: {
+                id: user.sub
+            }
+        })
+        return profile
     }
 
     getConfig() {
