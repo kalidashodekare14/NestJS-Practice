@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt'
 import { PrismaService } from '../prisma/prisma.service.js';
+import type { Role } from '../generated/prisma/client.js'
 
 @Injectable()
 export class AuthService {
@@ -34,19 +35,20 @@ export class AuthService {
             }
         })
 
-        if(!user){
+        if (!user) {
             throw new UnauthorizedException('Invalid email or password')
         }
 
         const isValidPassword = await bcrypt.compare(password, user.password);
 
-        if(!isValidPassword){
+        if (!isValidPassword) {
             throw new UnauthorizedException("Invalid email and password");
         }
 
         const accessToken = await this.generateToken(
             user.id,
-            user.email
+            user.email,
+            user.role
         )
 
         return {
@@ -55,10 +57,11 @@ export class AuthService {
 
     }
 
-    generateToken(userId: string, email: string) {
+    generateToken(userId: string, email: string, role: Role) {
         const payload = {
             sub: userId,
-            email
+            email,
+            role
         }
 
         return this.jwtService.sign(payload)

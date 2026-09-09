@@ -4,6 +4,8 @@ import { CreateUserDto } from './dto/create-user.dto/create-user.dto.js';
 import { AuthGuard } from '../auth/auth.guard.js';
 import { LoggingInterceptor } from '../logging/logging.interceptor.js';
 import type { AuthenticatedRequest } from '../common/types/authenticated-request.js';
+import { Roles } from '../auth/decorators/roles.decorator.js';
+import { RolesGuard } from '../auth/guards/roles.guard.js';
 
 
 @Controller('users')
@@ -11,21 +13,23 @@ export class UsersController {
 
     constructor(private readonly usersService: UsersService) { }
 
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles("ADMIN")
+    @Get("admin-data")
+    getAdminData(){
+        return {
+            success: true,
+            message: "Admin data retrieved successfully"
+        }
+    }
+
+
     @UseInterceptors(LoggingInterceptor)
     @Get()
-    getUsers(
-        // @Query("page", ParseIntPipe) page: number,
-        // @Query("limit", ParseIntPipe) limit: number,
-        // @Query("price", ParseFloatPipe) price: number,
-        // @Query("active", ParseBoolPipe) active: boolean,
-    ) {
+    getUsers() {
         return {
             success: true,
             message: "Users retrieved successfully",
-            // page,
-            // limit,
-            // price,
-            // active,
             data: this.usersService.getUsers(),
         }
     }
